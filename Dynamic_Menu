@@ -1,0 +1,56 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+
+namespace Test
+{
+    public partial class Dynamic_Menu : Form
+    {
+        SqlConnection CN = new SqlConnection("Data Source=NIRVANA\\SQLEXPRESS; Initial Catalog = test; Integrated Security = true ");
+        SqlCommand CMD;
+       
+       
+        string str_query;
+        public static string userid_str;
+
+        public Dynamic_Menu()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+
+        private void BTN_LOGIN_Click(object sender, EventArgs e)
+        {
+            CN.Open();
+            str_query = "select * from users where username ='" + TXT_USERNAME.Text + "' and password = '" + TXT_PASSWORD.Text + "' and  isdelete=0";
+            
+            
+            
+            CMD = new SqlCommand(str_query, CN);
+            SqlDataAdapter ADP = new SqlDataAdapter(CMD);
+            DataSet ds = new DataSet();
+            ADP.Fill(ds);
+            userid_str = ds.Tables[0].Rows[0][0].ToString();
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                MainForm mdi = new MainForm();
+                this.Hide();
+                mdi.Show();
+            }
+
+
+        }
+    }
+}
